@@ -100,7 +100,7 @@ func (r *RedisClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		if err != nil {
 			return ctrl.Result{RequeueAfter: time.Second * 10}, err
 		}
-	}
+	} 
 
 	err = k8sutils.CreateRedisLeader(instance)
 	if err != nil {

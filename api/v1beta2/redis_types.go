@@ -51,6 +51,8 @@ type RedisSpec struct {
 
 // RedisStatus defines the observed state of Redis
 type RedisStatus struct {
+	State  status.RedisStandaloneState `json:"state,omitempty"`
+	Reason string                   `json:"reason,omitempty"`
 }
 
 // +kubebuilder:object:root=true
