@@ -62,10 +62,13 @@ TOTAL_LEADERS=$(kubectl get redisclusters.redis.redis.opstreelabs.in "${CLUSTER_
 MASTERS_IP=($(redis-cli -h "$REDIS_HOST" -p "$REDIS_PORT" -a "$REDIS_PASSWORD" --no-auth-warning cluster nodes | grep "master" | awk '{print $2}' | cut -d "@" -f1))
 
 check_total_leaders_from_cr() {
-  # Check if TOTAL_LEADERS is 0 or nil
   if [[ -z "$TOTAL_LEADERS" || "$TOTAL_LEADERS" == 0 ]]; then
-    echo "Error: Total number of leader pods is 0"
-    exit 1
+    TOTAL_LEADERS=$(kubectl get redisclusters.redis.redis.opstreelabs.in "${CLUSTER_NAME}" -n "${CLUSTER_NAMESPACE}" -o jsonpath='{.spec.clusterSize}')
+    # After setting, check again if it's still zero or empty
+    if [[ -z "$TOTAL_LEADERS" || "$TOTAL_LEADERS" == 0 ]]; then
+      echo "Error: Total number of leader pods is 0"
+      exit 1
+    fi
   fi
 }
 
